@@ -85,14 +85,14 @@ class MyForm1 extends JFrame implements IConstants  {
 			public void actionPerformed(ActionEvent e) {
                             
 //				jtacenter.append(writecenter.getText()+"\n");//добавление в главное поле чата текста из поля ввода
-////ниже используется оператор try с ресурсами для автоматического закрытия файла на случай его неиспользования, чтобы предотвратить утечку ОЗУ компьютера			
-//				try (BufferedWriter buffer=new BufferedWriter(new FileWriter("1.txt", true))) {//создание объекта 1.txt с именем и возможностью дозаписи (true)
-//					buffer.write(writecenter.getText());//вывод информации в файл
-//					buffer.newLine();//запись со следующей строки в файл					
-//				}
-//				catch (Exception er){
-//					System.out.println ("Error");
-//				}
+//ниже используется оператор try с ресурсами для автоматического закрытия файла на случай его неиспользования, чтобы предотвратить утечку ОЗУ компьютера			
+				try (BufferedWriter buffer=new BufferedWriter(new FileWriter("1.txt", true))) {//создание объекта 1.txt с именем и возможностью дозаписи (true)
+					buffer.write(writecenter.getText());//вывод информации в файл
+					buffer.newLine();//запись со следующей строки в файл					
+				}
+				catch (Exception er){
+					System.out.println ("Error");
+				}
 
                             if (writecenter.getText().trim().length()>0){ /*если  в поле есть
                                 какой-нибудь текст то отправить его в сокет*/
@@ -148,9 +148,11 @@ class MyForm1 extends JFrame implements IConstants  {
                 socket = new Socket(SERVER_ADDR, SERVER_PORT);
                 writer = new PrintWriter(socket.getOutputStream());//объект для записи в поток вода-вывода( в сокет) 
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));//объект для чтения из потока ввода-вывода(из сокета) 
-                writer.println("Test"); // отправляем в сокет аутентификационную строку формируемую методом getLoginAndPassword()
+                
+//                writer.println(getLoginAndPassword()); // отправляем в сокет аутентификационную строку формируемую методом getLoginAndPassword()
                 writer.flush();//очищаем объект
                 new Thread(new ServerListener()).start();//создаем в отдельном потоке объект прослушивания сервера
+                jtacenter.append("\n Write command auth and enter  login and password \n and press SEND \n"); 
     //            // цикл для отлавливания строки со значением exit и написания текста на сервер
     //            do {
     //                message = scanner.nextLine();//запрос на ввод текста от пользователя
@@ -163,6 +165,9 @@ class MyForm1 extends JFrame implements IConstants  {
             }    
     //        System.out.println(CONNECT_CLOSED);
         }
+        
+        
+           
 
 /**      
      * ServerListener: get messages from Server
