@@ -74,7 +74,7 @@ class MyForm1 extends JFrame implements IConstants  {
 		jp[1].setLayout(new BorderLayout());//применяем компоновщик BorderLayout на второй панели
 		writecenter = new JTextArea(); //создаем многострочное текстовое поле JTextArea (для отправки сообщений)
 		writecenterscroll = new JScrollPane(writecenter);//создаем объект прокрутки текста JScrollPane куда помещаем созданное поле
-		buttonSend = new JButton("Send ");
+		buttonSend = new JButton("SEND ");
 		jp[1].add(writecenterscroll, BorderLayout.CENTER);//размещаем объект jsp на панель
 		jp[1].add(buttonSend, BorderLayout.EAST);//размещаем объект jsp на панель
 		
