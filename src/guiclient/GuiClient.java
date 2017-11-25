@@ -2,40 +2,28 @@ package guiclient;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 
 import java.io.*; //для ввода вывода информации
-//import java.net.*;
-//import java.util.*;
 import javax.swing.*;//для создания объектов gui
 import java.awt.*;//для создания gui и графики
 import java.awt.event.*;//обработка событий при реакции на объекты gui
 import java.net.Socket;
 
-
-
-/**
- * 
- * client chat GUI 
- *
- * @author Tveritin Yuri
- * 
+/** 
+ * client chat GUI
+ * @author Tveritin Yuri 
  */
-public class GuiClient {
-
-    /**
-     * @param args the command line arguments
-     */
+public class GuiClient {   
     public static void main(String[] args) {
-        MyForm1 w;
-        w = new MyForm1();
-    }
-    
+        MyGui w;
+        w = new MyGui();
+    }    
 }
 
-class MyForm1 extends JFrame implements IConstants  {
+/*Графический интерфейс*/
+
+class MyGui extends JFrame implements IConstants  {
     Socket socket;
     PrintWriter writer;
     BufferedReader reader;
@@ -46,7 +34,7 @@ class MyForm1 extends JFrame implements IConstants  {
     final JTextArea writecenter;//многострочное текстовое поле JTextArea (для отправки сообщений)
     JScrollPane writecenterscroll;//объект прокрутки текста JScrollPane для третьего текстового поля
     JButton buttonSend;//конпка Отправить
-	MyForm1() {
+	MyGui() {
                 
 		//создаем окно 
 		setTitle("KENTyku Chat");
