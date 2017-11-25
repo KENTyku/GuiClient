@@ -9,6 +9,8 @@ import javax.swing.*;//для создания объектов gui
 import java.awt.*;//для создания gui и графики
 import java.awt.event.*;//обработка событий при реакции на объекты gui
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** 
  * client chat GUI
@@ -34,14 +36,17 @@ class MyGui extends JFrame implements IConstants  {
     final JTextArea writecenter;//многострочное текстовое поле JTextArea (для отправки сообщений)
     JScrollPane writecenterscroll;//объект прокрутки текста JScrollPane для третьего текстового поля
     JButton buttonSend;//конпка Отправить
+    
+    /*конструктор графического интерфейса*/
+    
 	MyGui() {
                 
 		//создаем окно 
 		setTitle("KENTyku Chat");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(976, 0, 400, 700);
-		
-		setLayout(new BorderLayout());  //применяем компоновщик BorderLayout для располжения 2х панелей
+		//применяем компоновщик BorderLayout для располжения 2х панелей
+		setLayout(new BorderLayout());  
 		JPanel[] jp = new JPanel[2];
 		for (int i = 0; i < jp.length; i++) {
 			jp[i] = new JPanel();
@@ -66,34 +71,7 @@ class MyGui extends JFrame implements IConstants  {
 		jp[1].add(writecenterscroll, BorderLayout.CENTER);//размещаем объект jsp на панель
 		jp[1].add(buttonSend, BorderLayout.EAST);//размещаем объект jsp на панель
 		
-		
-		//обработка события кнопки Send
-		buttonSend.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-                            
-//				jtacenter.append(writecenter.getText()+"\n");//добавление в главное поле чата текста из поля ввода
-//ниже используется оператор try с ресурсами для автоматического закрытия файла на случай его неиспользования, чтобы предотвратить утечку ОЗУ компьютера			
-				try (BufferedWriter buffer=new BufferedWriter(new FileWriter("1.txt", true))) {//создание объекта 1.txt с именем и возможностью дозаписи (true)
-					buffer.write(writecenter.getText());//вывод информации в файл
-					buffer.newLine();//запись со следующей строки в файл					
-				}
-				catch (Exception er){
-					System.out.println ("Error");
-				}
-
-                            if (writecenter.getText().trim().length()>0){ /*если  в поле есть
-                                какой-нибудь текст то отправить его в сокет*/
-                                writer.println(writecenter.getText());
-                                writer.flush();
-                            }
-                            
-				writecenter.setText(null);//очистка поля ввода
-			}
-		});
-		
-		
-		//создание верхнего меню
+                //создание верхнего меню
 		
 		JMenuBar mainMenu = new JMenuBar();//создание меню
 		JMenu mFile = new JMenu("File");//создание пункта меню
@@ -109,27 +87,84 @@ class MyGui extends JFrame implements IConstants  {
 		mFile.add(miFileExit);//добавление подпункта в пункт mFile меню mainMenu
 		mEdit.add(miEditCut);//добавление подпункта в пункт mEdit меню mainMenu
 		
+                
+                /*
+                *
+                *Обработчики событий графического интерфейса
+                *
+                */
+                
+		//обработка события кнопки Send
+                
+		buttonSend.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {                            
+                           //отправка сообщения на сервер                            
+                            if (writecenter.getText().trim().length()>0){ /*если  в поле есть
+                                какой-нибудь текст то отправить его в сокет*/
+                                writer.println(writecenter.getText());
+                                writer.flush();
+                            }
+                            //отправка сообщения в текстовый файл(история исходящих сообщений) 
+                            /*
+                             * ниже используется оператор try с ресурсами для 
+                             *автоматического закрытия файла на случай его 
+                             *неиспользования, чтобы предотвратить утечку ОЗУ 
+                             *компьютера
+                             */			
+                            try (BufferedWriter buffer=new BufferedWriter(new FileWriter("1.txt", true))) {//создание объекта 1.txt с именем и возможностью дозаписи (true)
+                                buffer.write(writecenter.getText());//вывод информации в файл
+                                buffer.newLine();//запись со следующей строки в файл					
+                            }
+                            catch (Exception er){
+                                    System.out.println ("Error");
+                            }
+                             // цикл для отлавливания строки со значением exit  и выходом из приложения
+                            if (writecenter.getText().equals(EXIT_COMMAND)) {
+                                try {
+                                    socket.close();//закрытие сетевых подключений
+                                    System.exit(0);//выход из приложения
+                                } catch (IOException ex) {
+                                    Logger.getLogger(MyGui.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            //очистка поля ввода отправки сообщений
+                            writecenter.setText(null);
+			}
+		});	
+		
 		//обработка событий в меню
+                
+                //пункт Exit
 		miFileExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
-		});	
-		miEditCut.addActionListener(new ActionListener() {
+		});
+                
+		//пункт Add
+                miEditCut.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				jtacenter.append("Hello \n");//добавляет в основное поле чата строку Hello в конце.
 			}
 		});			
 		setVisible(true);
+                
+                //
                 //подключение к серверу
+                //
+          
                 Connect();
-
-
-
 	}
         
+        
+        /*
+        *метод подключения клиента к серверу
+        *
+        *
+        */
         
         final void Connect(){            
             try {
@@ -141,13 +176,7 @@ class MyGui extends JFrame implements IConstants  {
                 writer.flush();//очищаем объект
                 new Thread(new ServerListener()).start();//создаем в отдельном потоке объект прослушивания сервера
                 jtacenter.append("\n Write command auth and enter  login and password \n and press SEND \n"); 
-    //            // цикл для отлавливания строки со значением exit и написания текста на сервер
-    //            do {
-    //                message = scanner.nextLine();//запрос на ввод текста от пользователя
-    //                writer.println(message);//отправляем этот текст на сервер
-    //                writer.flush();//очищаем поток ввода вывода
-    //            } while (!message.equals(EXIT_COMMAND));
-    //            socket.close();
+    //           
             } catch (Exception ex) {
                 jtacenter.append(ex.getMessage());
             }    
