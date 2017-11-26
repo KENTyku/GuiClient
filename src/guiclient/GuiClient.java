@@ -186,16 +186,17 @@ class MyGui extends JFrame implements IConstants  {
         
            
 
-/**      
-     * ServerListener: get messages from Server
+    /**      
+     * Класс прослушивания сервера
      */
     class ServerListener implements Runnable {
-        String message;
+        String message;//вспомогательная переменная для хранения сообщения от сервера
         @Override
         public void run() {
             try {
+                //непрерывное чтение строк от сервера в цикле
                 while ((message = reader.readLine()) != null) {/*цикл постоянного 
-                    чтения строк из сокета сервера. И если сообщение с сервера не пустое*/
+                    чтения строк из сокета сервера. И если сообщение от сервера не пустое*/
                     if (!message.equals("\0")){                        
                         /*если сообщение с сервера не = \0,
                             то печатать $, в противном случае печатать само сообщение с 
