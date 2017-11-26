@@ -80,13 +80,13 @@ class MyGui extends JFrame implements IConstants  {
 		JMenuBar mainMenu = new JMenuBar();//создание меню
 		JMenu mFile = new JMenu("File");//создание пункта меню
 		JMenu mEdit = new JMenu("Edit");//создание пункта меню
-		JMenuItem miFileNew = new JMenuItem("New");//создание подпункта меню
+		JMenuItem miFileReconnect = new JMenuItem("Reconnect");//создание подпункта меню
 		JMenuItem miFileExit = new JMenuItem("Exit");//создание подпункта меню
 		JMenuItem miEditCut = new JMenuItem("Add");//создание подпункта меню
 		setJMenuBar(mainMenu);//установка меню mainMenu
 		mainMenu.add(mFile);//добавление пункта в меню mainMenu
 		mainMenu.add(mEdit);//добавление пункта в меню mainMenu
-		mFile.add(miFileNew);//добавление подпункта в пункт mFile меню mainMenu
+		mFile.add(miFileReconnect);//добавление подпункта в пункт mFile меню mainMenu
 		mFile.addSeparator(); // разделительная линия
 		mFile.add(miFileExit);//добавление подпункта в пункт mFile меню mainMenu
 		mEdit.add(miEditCut);//добавление подпункта в пункт mEdit меню mainMenu
@@ -138,6 +138,15 @@ class MyGui extends JFrame implements IConstants  {
 		});	
 		
 		//обработка событий в меню
+                
+                //пункт Reconnect
+                miFileReconnect.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				jtacenter.append("Reconnect \n");//добавляет в основное поле чата строку 
+                                Connect();
+			}
+		});		
                 
                 //пункт Exit
 		miFileExit.addActionListener(new ActionListener() {
