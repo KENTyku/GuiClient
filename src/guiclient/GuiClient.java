@@ -2,6 +2,10 @@ package guiclient;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
+Баги:
+1. После выключения сервера клиенты сами уже не могут подключиться к вновь 
+запущенному серверу.
+
  */
 
 import java.io.*; //для ввода вывода информации
@@ -203,9 +207,9 @@ class MyGui extends JFrame implements IConstants  {
                             переносом на след строку */
                         jtacenter.append(message + "\n");                        
                     }                    
-                    if (message.equals(AUTH_FAIL))/*если сообщение с сервера отказ 
-                        в авторизации, то закрыть клиент*/
-                        System.exit(-1); // terminate client
+//                    if (message.equals(AUTH_FAIL))/*если сообщение с сервера отказ 
+//                        в авторизации, то закрыть клиент*/
+//                        System.exit(-1); // terminate client
                 }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
