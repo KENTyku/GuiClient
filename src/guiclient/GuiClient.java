@@ -63,7 +63,7 @@ class MyGui extends JFrame implements IConstants  {
 		jtacenter = new JTextArea(); /*создаем многострочное текстовое поле (для отображения пришедших сообщений)
 			JTextArea*/
 		jspcenter = new JScrollPane(jtacenter);//создаем объект прокрутки текста JScrollPane куда помещаем созданное поле
-		jtaright = new JTextArea(" Users "); //создаем многострочное текстовое поле JTextArea (для отображения списка Пользователей)
+		jtaright = new JTextArea("    Users   "); //создаем многострочное текстовое поле JTextArea (для отображения списка Пользователей)
 		jspright = new JScrollPane(jtaright);//создаем объект прокрутки текста JScrollPane куда помещаем созданное поле
 		jp[0].add(jspcenter, BorderLayout.CENTER);//размещаем объект jsp на панель
 		jp[0].add(jspright, BorderLayout.EAST);//размещаем объект jsp на панель
@@ -186,9 +186,10 @@ class MyGui extends JFrame implements IConstants  {
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));//объект для чтения из потока ввода-вывода(из сокета) 
                 
 //                writer.println(getLoginAndPassword()); // отправляем в сокет аутентификационную строку формируемую методом getLoginAndPassword()
-                writer.flush();//очищаем объект
-                new Thread(new ServerListener()).start();//создаем в отдельном потоке объект прослушивания сервера
+//                writer.flush();//очищаем объект
                 jtacenter.append("\n Write command auth and enter  login and password \n and press SEND \n"); 
+                new Thread(new ServerListener()).start();//создаем в отдельном потоке объект прослушивания сервера
+                
     //           
             } catch (Exception ex) {
                 jtacenter.append(ex.getMessage());
@@ -210,6 +211,17 @@ class MyGui extends JFrame implements IConstants  {
                 //непрерывное чтение строк от сервера в цикле
                 while ((message = reader.readLine()) != null) {/*цикл постоянного 
                     чтения строк из сокета сервера. И если сообщение от сервера не пустое*/
+                    if (message.startsWith("/userlistadd")){
+                        Integer index=message.lastIndexOf("/userlistend");
+//                        jtacenter.append(index.toString()+"\n");//печать индекса последнего вхождения в строке                                               
+                        String[] userlist = message.substring(12, index).split(";");
+                        jtaright.setText("Users:");
+                        for (String user : userlist) {
+                            jtaright.append("\n"+user);
+                        }
+                        jtacenter.append(message.substring(index+12)+"\n");//вырезаем из строки всё что справа от символа с учетом поправки на длину 'userlistend'    
+                    }
+                   else
                     if (!message.equals("\0")){                        
                         /*если сообщение с сервера не = \0,
                             то печатать $, в противном случае печатать само сообщение с 
