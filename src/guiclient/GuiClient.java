@@ -172,7 +172,7 @@ class MyGui extends JFrame implements IConstants  {
                 //
           
                 Connect();
-                authorisation();
+//                authorisation();
 	}
         
         
@@ -188,9 +188,9 @@ class MyGui extends JFrame implements IConstants  {
                 writer = new PrintWriter(socket.getOutputStream());//объект для записи в поток вода-вывода( в сокет) 
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));//объект для чтения из потока ввода-вывода(из сокета) 
                 
-//                writer.println(getLoginAndPassword()); // отправляем в сокет аутентификационную строку формируемую методом getLoginAndPassword()
-//                writer.flush();//очищаем объект
-                jtacenter.append("\n Write command auth and enter  login and password \n and press SEND \n"); 
+                writer.println(authorisation()); // отправляем в сокет аутентификационную строку формируемую методом authorisation()
+                writer.flush();//очищаем объект
+//                jtacenter.append("\n Write command auth and enter  login and password \n and press SEND \n"); 
                 new Thread(new ServerListener()).start();//создаем в отдельном потоке объект прослушивания сервера
                 
     //           
@@ -202,8 +202,12 @@ class MyGui extends JFrame implements IConstants  {
         /*
         авторизация на сервере
         */
-        void authorisation(){
-            
+        String authorisation(){
+            String l=JOptionPane.showInputDialog(MyGui.this, new String[] {"Для подключения к сетевому чату","введите ваш логин"}, "Авторизация", JOptionPane.WARNING_MESSAGE);                                
+//            jtacenter.append("\n"+l+"\n");
+            String p=JOptionPane.showInputDialog(MyGui.this, new String[] {"Для подключения к сетевому чату","введите ваш пароль"}, "Авторизация", JOptionPane.WARNING_MESSAGE);                                
+//            jtacenter.append("\n"+p+"\n");
+            return("auth "+l+" "+p);
         }
         
         
