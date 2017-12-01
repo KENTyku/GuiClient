@@ -143,7 +143,7 @@ class MyGui extends JFrame implements IConstants  {
                 miFileReconnect.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				jtacenter.append("Reconnect \n");//добавляет в основное поле чата строку 
+				jtacenter.append("\n Reconnect \n");//добавляет в основное поле чата строку 
                                 Connect();
 			}
 		});		
@@ -156,11 +156,13 @@ class MyGui extends JFrame implements IConstants  {
 			}
 		});
                 
-		//пункт Add
+		//пункт Add . Вызов диалогового окна
                 miEditCut.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				jtacenter.append("Hello \n");//добавляет в основное поле чата строку Hello в конце.
+			public void actionPerformed(ActionEvent e) {				
+                                String s=JOptionPane.showInputDialog(MyGui.this, new String[] {"Неверно введен пароль!","Повторите пароль :"}, "Авторизация", JOptionPane.WARNING_MESSAGE);                                
+                                jtacenter.append("\n"+s+"\n");
+
 			}
 		});			
 		setVisible(true);
@@ -170,6 +172,7 @@ class MyGui extends JFrame implements IConstants  {
                 //
           
                 Connect();
+                authorisation();
 	}
         
         
@@ -196,6 +199,12 @@ class MyGui extends JFrame implements IConstants  {
             }    
     //        System.out.println(CONNECT_CLOSED);
         }
+        /*
+        авторизация на сервере
+        */
+        void authorisation(){
+            
+        }
         
         
            
@@ -211,14 +220,14 @@ class MyGui extends JFrame implements IConstants  {
                 //непрерывное чтение строк от сервера в цикле
                 while ((message = reader.readLine()) != null) {/*цикл постоянного 
                     чтения строк из сокета сервера. И если сообщение от сервера не пустое*/
-                    if (message.startsWith("/userlistadd")){
-                        Integer index=message.lastIndexOf("/userlistend");
-//                        jtacenter.append(index.toString()+"\n");//печать индекса последнего вхождения в строке                                               
-                        String[] userlist = message.substring(12, index).split(";");
-                        jtaright.setText("Users:");
+                    if (message.startsWith("/userlistadd")){//находим признак строки списка пользоватлей
+                        Integer index=message.lastIndexOf("/userlistend"); //определяем номер симова конца троки списка пользователей                                                                
+                        String[] userlist = message.substring(12, index).split(";");//формируем из строки списка пользоватлей массив с пользователями
+                        jtaright.setText("Users:");//обновляем поле списка пользователей(перезаписываем его)
                         for (String user : userlist) {
                             jtaright.append("\n"+user);
                         }
+                        //печатаем остаток того, что пришло после списка пользователей из сокета
                         jtacenter.append(message.substring(index+12)+"\n");//вырезаем из строки всё что справа от символа с учетом поправки на длину 'userlistend'    
                     }
                    else
@@ -238,3 +247,4 @@ class MyGui extends JFrame implements IConstants  {
         }
     }
 }
+
