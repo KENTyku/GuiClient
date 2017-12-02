@@ -78,14 +78,17 @@ class MyGui extends JFrame implements IConstants  {
                 //создание верхнего меню
 		
 		JMenuBar mainMenu = new JMenuBar();//создание меню
-		JMenu mFile = new JMenu("File");//создание пункта меню
+		JMenu mFile = new JMenu("Connection");//создание пункта меню
 		JMenu mEdit = new JMenu("Edit");//создание пункта меню
+                JMenuItem miFileRegistration = new JMenuItem("Registration");//создание подпункта меню
 		JMenuItem miFileReconnect = new JMenuItem("Reconnect");//создание подпункта меню
 		JMenuItem miFileExit = new JMenuItem("Exit");//создание подпункта меню
 		JMenuItem miEditCut = new JMenuItem("Add");//создание подпункта меню
 		setJMenuBar(mainMenu);//установка меню mainMenu
 		mainMenu.add(mFile);//добавление пункта в меню mainMenu
 		mainMenu.add(mEdit);//добавление пункта в меню mainMenu
+                mFile.add(miFileRegistration);//добавление подпункта в пункт mFile меню mainMenu
+                mFile.addSeparator(); // разделительная линия
 		mFile.add(miFileReconnect);//добавление подпункта в пункт mFile меню mainMenu
 		mFile.addSeparator(); // разделительная линия
 		mFile.add(miFileExit);//добавление подпункта в пункт mFile меню mainMenu
@@ -138,6 +141,15 @@ class MyGui extends JFrame implements IConstants  {
 		});	
 		
 		//обработка событий в меню
+                
+                //пункт Registarion
+                miFileRegistration.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				jtacenter.append("\n Registration \n");//добавляет в основное поле чата строку 
+                                registration();
+			}
+		});		
                 
                 //пункт Reconnect
                 miFileReconnect.addActionListener(new ActionListener() {
@@ -208,6 +220,17 @@ class MyGui extends JFrame implements IConstants  {
             String p=JOptionPane.showInputDialog(MyGui.this, new String[] {"Для подключения к сетевому чату","введите ваш пароль"}, "Авторизация", JOptionPane.WARNING_MESSAGE);                                
 //            jtacenter.append("\n"+p+"\n");
             return("auth "+l+" "+p);
+        }
+        /*
+        запрос на регистрацию 
+        если не авторизован
+        */
+        String registration(){
+            String newlogin=JOptionPane.showInputDialog(MyGui.this, new String[] {"Регистрация нового пользователя","Придумайте логин"}, "Регистрация нового пользователя", JOptionPane.WARNING_MESSAGE);                                
+            String newpass=JOptionPane.showInputDialog(MyGui.this, new String[] {"Регистрация нового пользователя","Придумайте пароль"}, "Регистрация нового пользователя", JOptionPane.WARNING_MESSAGE);
+            String email=JOptionPane.showInputDialog(MyGui.this, new String[] {"Регистрация нового пользователя","Введите ваш email"}, "Регистрация нового пользователя", JOptionPane.WARNING_MESSAGE);
+            String birthday=JOptionPane.showInputDialog(MyGui.this, new String[] {"Регистрация нового пользователя","Введите ваш день рождения(число и месяц)"}, "Регистрация нового пользователя", JOptionPane.WARNING_MESSAGE);
+            return("/reg"+newlogin+";"+newpass+";"+email+";"+birthday);
         }
         
         
