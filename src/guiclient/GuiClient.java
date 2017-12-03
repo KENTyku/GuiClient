@@ -24,6 +24,9 @@ public class GuiClient {
     public static void main(String[] args) {
         MyGui w;
         w = new MyGui();
+//        //отправка тестового сообщения серверу каждые 10 секунд 
+//        w.writer.println("/echo");
+//        w.writer.flush();
     }    
 }
 
@@ -185,6 +188,13 @@ class MyGui extends JFrame implements IConstants  {
           
                 Connect();
 //                authorisation();
+
+                /*
+                //отправка тестового сообщения серверу каждые 10 секунд для проверки доступности
+                */
+ 
+                sendEcho();
+                
 	}
         
         
@@ -234,6 +244,27 @@ class MyGui extends JFrame implements IConstants  {
         }
         
         
+        //отправка тестового сообщения серверу каждые 10 секунд для проверки доступности
+        void sendEcho(){            
+            while (true) {
+//                long s1 = System.currentTimeMillis();
+                long s1=0;
+                while (true){
+                    s1++;
+//                    long s2 = System.currentTimeMillis();
+//                    System.out.println(s2-s1);
+                    if (s1==1000000000) {                    
+                        writer.println("/echo");
+                        writer.flush();
+//                        jtacenter.append("\n/echo*");
+                        break;
+                    }
+                
+                }
+            }
+            
+        }
+        
            
 
     /**      
@@ -257,12 +288,18 @@ class MyGui extends JFrame implements IConstants  {
                         //печатаем остаток того, что пришло после списка пользователей из сокета
                         jtacenter.append(message.substring(index+12)+"\n");//вырезаем из строки всё что справа от символа с учетом поправки на длину 'userlistend'    
                     }
-                   else
+//                   else
+//                        if (message.startsWith("/echo")){
+//                            writer.println("/echo"); // отправляем в сокет эхо строку
+//                            jtacenter.append(message);                         
+//                            writer.flush();//очищаем объект
+//                        }
+                    else
                     if (!message.equals("\0")){                        
                         /*если сообщение с сервера не = \0,
                             то печатать $, в противном случае печатать само сообщение с 
                             переносом на след строку */
-                        jtacenter.append(message + "\n");                        
+                        jtacenter.append("\n"+message);                        
                     }                    
 //                    if (message.equals(AUTH_FAIL))/*если сообщение с сервера отказ 
 //                        в авторизации, то закрыть клиент*/
