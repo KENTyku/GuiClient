@@ -132,8 +132,9 @@ class MyGui extends JFrame implements IConstants  {
                              // цикл для отлавливания строки со значением exit  и выходом из приложения
                             if (writecenter.getText().equals(EXIT_COMMAND)) {
                                 try {
+                                    writer.println(EXIT_COMMAND);
                                     socket.close();//закрытие сетевых подключений
-                                    System.exit(0);//выход из приложения
+//                                    System.exit(0);//выход из приложения
                                 } catch (IOException ex) {
                                     Logger.getLogger(MyGui.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -167,7 +168,13 @@ class MyGui extends JFrame implements IConstants  {
 		miFileExit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+                            try {
+                                writer.println(EXIT_COMMAND);
+                                socket.close();
+                                System.exit(0);
+                            } catch (IOException ex) {
+                                Logger.getLogger(MyGui.class.getName()).log(Level.SEVERE, null, ex);
+                            }
 			}
 		});
                 
@@ -193,7 +200,7 @@ class MyGui extends JFrame implements IConstants  {
                 //отправка тестового сообщения серверу каждые 10 секунд для проверки доступности
                 */
  
-                sendEcho();
+//                sendEcho();
                 
 	}
         
@@ -244,26 +251,26 @@ class MyGui extends JFrame implements IConstants  {
         }
         
         
-        //отправка тестового сообщения серверу каждые 10 секунд для проверки доступности
-        void sendEcho(){            
-            while (true) {
-//                long s1 = System.currentTimeMillis();
-                long s1=0;
-                while (true){
-                    s1++;
-//                    long s2 = System.currentTimeMillis();
-//                    System.out.println(s2-s1);
-                    if (s1==1000000000) {                    
-                        writer.println("/echo");
-                        writer.flush();
-//                        jtacenter.append("\n/echo*");
-                        break;
-                    }
-                
-                }
-            }
-            
-        }
+//        //отправка тестового сообщения серверу каждые 10 секунд для проверки доступности
+//        void sendEcho(){            
+//            while (true) {
+////                long s1 = System.currentTimeMillis();
+//                long s1=0;
+//                while (true){
+//                    s1++;
+////                    long s2 = System.currentTimeMillis();
+////                    System.out.println(s2-s1);
+//                    if (s1==1000000000) {                    
+//                        writer.println("/echo");
+//                        writer.flush();
+////                        jtacenter.append("\n/echo*");
+//                        break;
+//                    }
+//                
+//                }
+//            }
+//            
+//        }
         
            
 
